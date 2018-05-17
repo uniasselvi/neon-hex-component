@@ -30,3 +30,4 @@ This repo goes with the [Build your first Polymer element tutorial](https://www.
 ## Next steps
 
 Follow the [Build your first Polymer element tutorial](https://www.polymer-project.org/3.0/start/first-element/intro) to get started with Polymer.
+# neon-hex-component
