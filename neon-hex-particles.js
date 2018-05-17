@@ -1,7 +1,6 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-icon/iron-icon.js';
+import { LitElement, html } from '@polymer/polymer/lit-element.js';
 
-class IconToggle extends PolymerElement {
+class NeonHexParticles extends LitElement {
   static get template() {
     return html`
       <style>
