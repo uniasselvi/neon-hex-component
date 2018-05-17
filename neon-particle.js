@@ -1,7 +1,10 @@
 export class NeonParticle {
 
-	constructor(canvasContext) {
-		this.ctx = canvasContext;
+	constructor(hexAnimation) {
+		
+		this.ctx = hexAnimation.ctx;
+		this.settings = hexAnimation.settings;
+
 		this.x = 0;
 		this.y = 0;
 		this.age = 0;
@@ -61,7 +64,7 @@ export class NeonParticle {
 
 		this.ctx.fillStyle = this.color.replace('light', '70');
 		this.ctx.beginPath();
-		this.ctx.arc(this.canvas.width / 2.0 + this.x, this.canvas.height / 2.0 + this.y, this.settings.radius, 0, 6.3);
+		this.ctx.arc(this.ctx.canvas.width / 2.0 + this.x, this.ctx.canvas.height / 2.0 + this.y, this.settings.radius, 0, 6.3);
 
 		this.ctx.shadowBlur = this.settings.radius * 6;
 		this.ctx.shadowColor = this.color.replace('light', '30');

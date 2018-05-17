@@ -10,11 +10,16 @@ import { NeonParticle } from './neon-particle';
  */
 export class NeonHexAnimation {
 	constructor(canvas, settings) {
+
+		if (typeof canvas === 'undefined') {
+			throw DOMException('Undefined canvas element.');
+		}
+
 		this.canvas = canvas;
 		this.ctx = canvas.getContext('2d');
 
 		this.settings = Object.assign({
-			lineLength: 50,
+			// lineLength: 50, // // particle
 			speed: 1,
 			lifeTime: 500,
 			maxParticles: 80,
@@ -23,13 +28,22 @@ export class NeonHexAnimation {
 		}, settings);
 
 		this.visited = [];
+		/**
+		 * @var NeonParticle[]
+		 */
 		this.particles = [];
-
-		// set the canvas width/height
-		this.updateCanvasSize();
 
 		// update the width/height if the window is resized
 		window.onresize = this.updateCanvasSize;
+	}
+
+	/**
+	 * Starts the animation drawing.
+	 */
+	init() {
+
+		// set the canvas width/height
+		this.updateCanvasSize();
 
 		// start drawing
 		this.updateAndDraw();
@@ -47,8 +61,8 @@ export class NeonHexAnimation {
 	}
 
 	updateCanvasSize() {
-		this.canvas.width = this.canvas.parentElement.offsetWidth;
-		this.canvas.height = this.canvas.parentElement.offsetHeight;
+		// this.canvas.width = this.canvas.parentElement.offsetWidth;
+		// this.canvas.height = this.canvas.parentElement.offsetHeight;
 	}
 
 	updateAndDraw() {
@@ -64,14 +78,14 @@ export class NeonHexAnimation {
 		if (this.particles.length < this.settings.maxParticles) {
 			// if more particles can be added
 			if (Math.random() > 0.9) {
-				this.particles.push(new NeonParticle(this.ctx));
+				this.particles.push(new NeonParticle(this));
 			}
 		} else if (this.particles.length > this.settings.maxParticles) {
 			// if there are two many particles
 			this.particles.splice(0, this.settings.maxParticles);
 		}
 
-		requestAnimationFrame(this.updateAndDraw);
+		requestAnimationFrame(() => this.updateAndDraw());
 	}
 
 	removeTooOldParticles(particles) {

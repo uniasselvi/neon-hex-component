@@ -1,8 +1,9 @@
 import { LitElement, html } from '@polymer/lit-element';
+import { NeonHexAnimation } from './neon-hex-animation';
 
 class NeonHexComponent extends LitElement {
   
-	static get template() {
+	_render() {
 		return html`<canvas></canvas>`;
 	}
 
@@ -17,13 +18,12 @@ class NeonHexComponent extends LitElement {
 		};
 	}
 
-	constructor() {
-		super();
-		this.addEventListener('click', this.toggle.bind(this));
-	}
-
-	toggle() {
-		this.pressed = !this.pressed;
+	/**
+	 * Called after element DOM has been rendered.
+	 */
+	_didRender() {
+		this.hexAnimation = new NeonHexAnimation(this.shadowRoot.querySelector('canvas'));
+		this.hexAnimation.init();
 	}
 
 }

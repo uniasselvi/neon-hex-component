@@ -1,8 +1,8 @@
 import { LitElement, html } from '@polymer/lit-element';
-import '../neon-hex.component';
+import '../neon-hex.component.js';
 
 class DemoElement extends LitElement {
-	static get template() {
+	_render() {
 		return html `<neon-hex></neon-hex>`;
 	}
 
