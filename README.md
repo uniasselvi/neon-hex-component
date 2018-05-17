@@ -16,11 +16,11 @@ This repo goes with the [Build your first Polymer element tutorial](https://www.
 
 3.  Clone this repo: 
 
-        git clone https://github.com/PolymerLabs/polymer-3-first-element.git
+        git clone https://github.com/PolymerLabs/neon-hex-component.git
 
 4.  Change directory to the top-level project folder and install project dependencies:
 
-        cd polymer-3-first-element
+        cd neon-hex-component
         npm install
         
 5.  To preview your element, run the Polymer development server from the top-level project folder:
