@@ -9,32 +9,31 @@ import { NeonParticle } from './neon-particle';
  * and the ctx.globalCompositeOperation change to make it look nicer.
  */
 export class NeonHexAnimation {
-	constructor(canvas, settings) {
+	constructor(context, settings) {
 
-		if (typeof canvas === 'undefined') {
-			throw DOMException('Undefined canvas element.');
+		if (typeof context === 'undefined') {
+			throw DOMException('You must provide a context for drawing the animation.');
 		}
 
-		this.canvas = canvas;
-		this.ctx = canvas.getContext('2d');
+		this.ctx = context;
 
 		this.settings = Object.assign({
-			// lineLength: 50, // // particle
-			speed: 1,
 			lifeTime: 500,
 			maxParticles: 80,
-			radius: 1,
+			// particle
+			lineLength: 50,
+			speed: 1,
+			radius: 1,		
 			avoidVisited: true
 		}, settings);
 
-		this.visited = [];
 		/**
 		 * @var NeonParticle[]
 		 */
 		this.particles = [];
 
 		// update the width/height if the window is resized
-		window.onresize = this.updateCanvasSize;
+		window.onresize = e => this.updateCanvasSize();
 	}
 
 	/**
@@ -50,27 +49,25 @@ export class NeonHexAnimation {
 	}
 
 	clearTrails() {
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		this.visited = [];
+		this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+		this.particles.forEach(x => x.visited = []);
 	}
 
 	restart() {
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		this.particles = [];
-		this.visited = [];
+		this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+		this.particles.forEach(x => x = null);
 	}
 
 	updateCanvasSize() {
-		// this.canvas.width = this.canvas.parentElement.offsetWidth;
-		// this.canvas.height = this.canvas.parentElement.offsetHeight;
+		this.canvasWidth = this.ctx.canvas.offsetWidth;
+		this.canvasHeight = this.ctx.canvas.offsetHeight;
 	}
 
 	updateAndDraw() {
-		this.ctx.shadowBlur = 0;
-		this.ctx.globalCompositeOperation = 'source-over';
 
+		this.ctx.shadowBlur = 0;
 		this.ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
-		this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+		this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 		this.ctx.globalCompositeOperation = 'lighter';
 
 		this.removeTooOldParticles(this.particles);
@@ -78,7 +75,7 @@ export class NeonHexAnimation {
 		if (this.particles.length < this.settings.maxParticles) {
 			// if more particles can be added
 			if (Math.random() > 0.9) {
-				this.particles.push(new NeonParticle(this));
+				this.particles.push(new NeonParticle(this.settings.radius));
 			}
 		} else if (this.particles.length > this.settings.maxParticles) {
 			// if there are two many particles
@@ -88,10 +85,20 @@ export class NeonHexAnimation {
 		requestAnimationFrame(() => this.updateAndDraw());
 	}
 
+	/**
+	 * 
+	 * @param {NeonParticle[]} particles 
+	 */
 	removeTooOldParticles(particles) {
-		// go backwards through the particles, allowing them to be removed if neccesary
+		// go backwards through the particles, 
+		// allowing them to be removed if neccesary
 		for (let i = particles.length - 1; i >= 0; i--) {
-			particles[i].updateAndDraw();
+			particles[i].updateAndDraw(
+				this.ctx, 
+				this.settings.lineLength, 
+				this.settings.speed,
+				this.settings.avoidVisited
+			);
 
 			if (particles[i].age > this.settings.lifeTime) {
 				// remove the particle if it is too old

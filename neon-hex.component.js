@@ -4,15 +4,26 @@ import { NeonHexAnimation } from './neon-hex-animation';
 class NeonHexComponent extends LitElement {
   
 	_render() {
-		return html`<canvas></canvas>`;
+		return html`
+			<style>
+			:host {
+				display: block;
+			}
+			:host,
+			canvas {
+				width: 100%; 
+				height: 100%;
+			}
+			</style>
+			<canvas></canvas>
+		`;
 	}
 
 	static get properties() {
 		return {
-			lineLength: 50,
+			maxParticles: 80,
 			speed: 1,
 			lifeTime: 500,
-			maxParticles: 80,
 			radius: 1,
 			avoidVisited: true
 		};
@@ -21,8 +32,8 @@ class NeonHexComponent extends LitElement {
 	/**
 	 * Called after element DOM has been rendered.
 	 */
-	_didRender() {
-		this.hexAnimation = new NeonHexAnimation(this.shadowRoot.querySelector('canvas'));
+	_didRender(props) {
+		this.hexAnimation = new NeonHexAnimation(this.shadowRoot.querySelector('canvas').getContext('2d'), props);
 		this.hexAnimation.init();
 	}
 
